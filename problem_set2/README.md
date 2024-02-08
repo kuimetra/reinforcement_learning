@@ -22,7 +22,7 @@ The main methods the model provide for your task are:
 The model follows the following encoding:
 
 - *states* are represented as a tuple *(i,j)*, where the first index encodes the row and the second index encodes the
-  column. Becuase of the shape of the gridworld, *i* must be greater or equal to *0* and smaller or equal to *30*; *j*
+  column. Because of the shape of the gridworld, *i* must be greater or equal to *0* and smaller or equal to *30*; *j*
   must be greater or equal to *0* and smaller or equal to *99*.
 - *actions* are encoded by the strings *'forward', 'upforward', 'downforward'*.
 

@@ -76,9 +76,9 @@ class Mountain:
 
     def get_reward(self, state: Tuple[int, int], action: str) -> float:
         """
-        We want to minimize accumulated time  getting accross the terrain. The time it takes the sled to cover one unit
+        We want to minimize accumulated time getting across the terrain. The time it takes the sled to cover one unit
         of distance on the hill depends directly on how rough roughness is equivalent to the time. This is equivalent to
-        maximizing the accumulated negative time
+        maximizing the accumulated negative time.
 
         input: 
             state: position (i,j) or equivalently (y,x)
