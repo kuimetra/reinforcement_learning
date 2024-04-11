@@ -29,8 +29,8 @@ class CookieDisasterEnv(gym.Env):
         self.scale_y = self.window_size[1] / self.height
 
         self.lifetime = self.config["lifetime"]
-        print(f'cookiedisaster\envs\imgs\{self.config["img"]}.png')
-        self.cookie_image = pygame.image.load(f'cookiedisaster\envs\imgs\{self.config["img"]}.png')
+        print(f'cookiedisaster/envs/imgs/{self.config["img"]}.png')
+        self.cookie_image = pygame.image.load(f'cookiedisaster/envs/imgs/{self.config["img"]}.png')
         self.cookie_image = pygame.transform.scale(self.cookie_image, (20, 20))
         self.target_image = pygame.transform.scale(self.cookie_image, (35, 35))
 
