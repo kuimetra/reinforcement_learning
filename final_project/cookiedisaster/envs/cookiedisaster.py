@@ -8,17 +8,13 @@ import math
 
 np.random.seed(0)
 
-config_v1 = {"img": "cookie", "width": 10, "lifetime": 5, "friction": lambda vel: -(vel ** 2) * 0.05}
-config_v2 = {"img": "cake", "width": 5, "lifetime": 4, "friction": lambda vel: -(vel ** 2) * 0.08}
-config_v3 = {"img": "scones", "width": 12, "lifetime": 7, "friction": lambda vel: -(vel ** 2) * 0.1}
+config_v1 = {"img": "cookie", "width": 10, "lifetime": 5, "friction": lambda vel: - abs(vel) * vel * 0.05}
+config_v2 = {"img": "cake", "width": 5, "lifetime": 4, "friction": lambda vel: - abs(vel) * vel * 0.08}
+config_v3 = {"img": "scone", "width": 12, "lifetime": 7, "friction": lambda vel: - abs(vel) * vel * 0.1}
 
 
 class CookieDisasterEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
-
-    # versions  = {"cookiedisaster1": {"img": "cookie", "width" : 10, "lifetime":5},
-    #             "cookiedisaster4": {"img": "cake", "width" : 5, "lifetime":4},
-    #             "cookiedisaster3": {"img": "cookie", "width" : 12, "lifetime":6}}
 
     def __init__(self, config=config_v1, render_mode=None):
         self.config = config
@@ -29,8 +25,8 @@ class CookieDisasterEnv(gym.Env):
         self.scale_y = self.window_size[1] / self.height
 
         self.lifetime = self.config["lifetime"]
-        print(f'cookiedisaster/envs/imgs/{self.config["img"]}.png')
-        self.cookie_image = pygame.image.load(f'cookiedisaster/envs/imgs/{self.config["img"]}.png')
+        img_file_name = f'{self.config["img"]}.png'
+        self.cookie_image = pygame.image.load(os.path.join('cookiedisaster', 'envs', 'imgs', img_file_name))
         self.cookie_image = pygame.transform.scale(self.cookie_image, (20, 20))
         self.target_image = pygame.transform.scale(self.cookie_image, (35, 35))
 

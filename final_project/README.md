@@ -26,7 +26,7 @@ or ```cookiedisaster-v3``` as:
 import gymnasium
 import cookiedisaster
 
-env = gymnasium.make('cookiedisaster/cookiedisaster-v1')
+env = gymnasium.make('cookiedisaster-v1')
 ```
 
 In the file ```BaseAgent.py``` you will find a simple interface for your RL agent. Please provide your trained agent
@@ -43,5 +43,5 @@ In order to setup load it, you can run:
 ```
 import gymnasium
 
-env = gymnasium.make('InvertedPendulum-v1')
+env = gymnasium.make('InvertedPendulum-v4')
 ```

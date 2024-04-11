@@ -39,35 +39,8 @@ class Bandits():
         return self._get_obs(), reward, True, False, self._get_info()
 
 
-class Bandits_one(Bandits):
-    def __init__(self):
-        self.k = 3
-        self.means = np.array([1, 2, 3])
-        self.variances = np.ones(len(self.means))
-        self._step = 0
-        self.state = None
-
-
-class Bandits_two(Bandits):
-    def __init__(self):
-        self.k = 4
-        self.means = np.array([1, 2, 3, 2.5])
-        self.variances = np.ones(len(self.means))
-        self._step = 0
-        self.state = None
-
-
-class Bandits_three(Bandits):
-    def __init__(self):
-        self.k = 3
-        self.means = np.array([2, 1.5, 2.2])
-        self.variances = np.array([1, 1, 3])
-        self._step = 0
-        self.state = None
-
-
 class Bandits_final(Bandits):
-    def __init__(self, gene: int = 0):
+    def __init__(self):
         self.k = 3
         self.means = sample_new_means()
         self.variances = np.array([1., 1., 1.])
