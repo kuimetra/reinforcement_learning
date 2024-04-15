@@ -24,6 +24,7 @@ class CookieDisasterEnv(gym.Env):
         self.scale_x = self.window_size[0] / self.width
         self.scale_y = self.window_size[1] / self.height
 
+        self.is_open = True
         self.lifetime = self.config["lifetime"]
         img_file_name = f'{self.config["img"]}.png'
         self.cookie_image = pygame.image.load(os.path.join('cookiedisaster', 'envs', 'imgs', img_file_name))
@@ -85,7 +86,7 @@ class CookieDisasterEnv(gym.Env):
         return self.config["friction"](vel)
 
     def _collides(self, x: float):
-        if x <= 0 or x >= 10:
+        if x <= 0 or x >= self.width:
             return True
         return False
 
@@ -117,7 +118,7 @@ class CookieDisasterEnv(gym.Env):
         self._cummlative_reward = 0
         self.cookie_time = self.lifetime
 
-        self._target_location = np.random.uniform(0.001, 0.9999)
+        self._target_location = np.random.uniform(0, self.width)
 
         observation = self._get_obs()
         info = self._get_info()
@@ -131,7 +132,7 @@ class CookieDisasterEnv(gym.Env):
         if self._step == 0:
             return
 
-        if (np.round(self.cookie_time, 2) == 0 and not gotCookie) or gotCookie:
+        if (np.round(self.cookie_time, 2) <= 0 and not gotCookie) or gotCookie:
             self._target_location = np.random.uniform(0, self.width)
             self.cookie_time = self.lifetime
 
@@ -157,10 +158,7 @@ class CookieDisasterEnv(gym.Env):
 
         self._step += 1
 
-        # An episode is done if the agent has reached the target
-        reached_goal = np.array_equal(self._agent_location, self._target_location)
-
-        terminated = reached_goal
+        truncated = not self.is_open
 
         for i, pos in enumerate(self.cookie_positions):
             x_pos = pos[0] + 2
@@ -179,13 +177,22 @@ class CookieDisasterEnv(gym.Env):
         self.time += self.delta_time
         self.cookie_time -= self.delta_time
 
-        return observation, reward, False, False, info
+        return observation, reward, False, truncated, info
 
     def render(self):
         if self.render_mode == "rgb_array":
             return self._render_frame()
+        elif self.render_mode == "human" and self.is_open:
+            self._render_frame()
+            pygame.event.pump()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.is_open = False
+                    self.close()  # Close the environment safely if the user closes the window
 
     def _render_frame(self):
+        if not self.is_open:
+            return
         if self.window is None and self.render_mode == "human":
             pygame.init()
             self.window = pygame.display.set_mode(self.window_size)
@@ -214,8 +221,8 @@ class CookieDisasterEnv(gym.Env):
         pygame.draw.rect(canvas, (50, 40, 25), (floor_belt_top_left, floor_belt_width_height))
 
         # Draw lights on the ceiling
-        for i in range(1, 10, 2):
-            pygame.draw.circle(canvas, (255, 255, 0), (i * self.scale_x, 52), 10)
+        for i in range(1, self.width, 2):
+            pygame.draw.circle(canvas, (255, 255, 0), (i * self.scale_x, 52), self.width)
 
         for pos in self.cookie_positions:
             canvas.blit(self.cookie_image, (pos[0], pos[1]))
@@ -256,3 +263,5 @@ class CookieDisasterEnv(gym.Env):
         if self.window is not None:
             pygame.display.quit()
             pygame.quit()
+            self.window = None
+            self.clock = None
